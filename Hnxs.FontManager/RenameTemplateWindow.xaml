@@ -1,0 +1,35 @@
+<Window x:Class="Hnxs.FontManager.RenameTemplateWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="파일명 변경"
+        Height="220"
+        Width="420"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="NoResize"
+        Background="#F6F8FB">
+    <Grid Margin="22">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="파일명 템플릿 선택" FontSize="18" FontWeight="SemiBold" />
+        <TextBlock Grid.Row="1"
+                   Text="선택한 폰트의 메타데이터로 새 파일명을 미리 만든 뒤 적용합니다."
+                   Foreground="#6B7A90"
+                   TextWrapping="Wrap"
+                   Margin="0,8,0,18" />
+
+        <ComboBox x:Name="TemplateComboBox"
+                  Grid.Row="2"
+                  Height="36"
+                  VerticalContentAlignment="Center" />
+
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,22,0,0">
+            <Button Content="취소" Width="82" Height="34" Margin="0,0,8,0" IsCancel="True" />
+            <Button Content="미리보기" Width="92" Height="34" IsDefault="True" Click="Confirm_Click" />
+        </StackPanel>
+    </Grid>
+</Window>

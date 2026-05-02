@@ -1,0 +1,187 @@
+metadata:
+  seed_id: hnxs-font-manager-1-0
+  version: 1.0.0
+  created_at: 2026-05-02
+  source: ooo interview fallback
+  ambiguity_score: 0.12
+  project_type: greenfield
+
+goal: >
+  Build HNXS Font Manager, a fast Windows desktop application for managing font
+  files from folders and ZIP archives, with installed-state detection, duplicate
+  analysis, batch installation, batch filename normalization, and a clean
+  navigator-style WPF interface similar to the provided reference image.
+
+constraints:
+  - Must target Windows desktop.
+  - Must be implemented with WPF / .NET.
+  - Program name must be HNXS Font Manager.
+  - UI responsiveness is the highest performance priority.
+  - Initial font discovery must stream results progressively instead of waiting
+    for full metadata, hash, duplicate, or installation analysis.
+  - Long-running scan, ZIP, hash, install, and rename work must run in the
+    background with progress and cancellation.
+  - Folder input must support an option to include or exclude subfolders.
+  - ZIP input must be extracted into a temporary working folder before editing.
+  - ZIP changes must be recompressed after work is complete.
+  - ZIP save mode must be user-selectable, with new ZIP output as the default
+    and overwrite as an advanced option.
+  - Font installation must support current-user and system-wide modes, with
+    current-user installation as the default.
+  - Batch rename templates must be selectable from a dropdown.
+  - Invalid filename characters from font metadata must be transformed into
+    Windows-safe filename text.
+  - Filename collisions during rename must be resolved by automatic numeric
+    suffixes such as "Inter Regular (2).otf".
+  - Version 1.0 must exclude cloud sync, automatic updates, font purchasing,
+    license-management workflows, design-tool integrations, advanced full-glyph
+    browsing, collection/tag systems, font editing, and non-Windows support.
+
+acceptance_criteria:
+  - The app opens as HNXS Font Manager with a three-pane layout: left navigation,
+    central font list/work area, and right detail/preview panel.
+  - Users can import a folder and choose whether subfolders are included.
+  - Users can import a ZIP archive, work on fonts extracted to a temporary
+    folder, and save changes back as either a new ZIP or an overwrite.
+  - Supported font files from the selected folder or ZIP appear progressively in
+    the central list while scanning continues.
+  - The font list displays at minimum selection checkbox, font family/style,
+    preview text, version, file format, file path/source, and installed-state
+    status.
+  - Installed-state status distinguishes not installed, name match, identical
+    file installed, version differs, and possible conflict.
+  - Duplicate analysis groups fonts by family and style, shows version
+    differences, and identifies exact duplicate files by hash within those
+    groups.
+  - Users can select fonts with checkboxes and install selected items.
+  - Install mode can be switched between current-user and system-wide install;
+    system-wide install handles required elevation or reports permission failure
+    clearly.
+  - Users can select fonts with checkboxes and run batch rename.
+  - Batch rename provides dropdown templates including family/style, family with
+    version, designer/family/style, foundry/family/style, underscore, and hyphen
+    variants.
+  - Batch rename preview shows old and new filenames before applying changes.
+  - Batch rename converts invalid Windows filename characters and handles
+    duplicate output names with numeric suffixes.
+  - The right detail panel shows selected font metadata, larger preview, editable
+    preview text, preview size control, version/format, designer/foundry when
+    available, license when available, glyph sample, and language/script hints
+    when available.
+  - Search and filters allow users to narrow fonts by text query, installed
+    state, duplicate state, format, and source.
+  - A work log records scan, install, duplicate-check, rename, ZIP extract, and
+    ZIP recompress actions with success/failure information.
+  - The UI remains responsive during scans, metadata extraction, hashing,
+    duplicate analysis, installation, rename, and ZIP recompression.
+  - Users can cancel long-running folder/ZIP scanning and batch operations.
+  - Development builds can produce a single executable.
+  - Release builds can produce a Windows installer.
+
+ontology_schema:
+  name: FontManagementDomain
+  description: >
+    Domain model for importing, analyzing, previewing, installing, and renaming
+    font files in a high-performance Windows font manager.
+  fields:
+    - name: font_asset
+      type: object
+      description: A discovered font file from a folder, subfolder, or ZIP source.
+    - name: font_metadata
+      type: object
+      description: Extracted family, style, version, designer, foundry, license,
+        format, glyph/language hints, and display names.
+    - name: source_location
+      type: object
+      description: Original source type and path, including folder, ZIP archive,
+        extracted temporary path, and relative path inside ZIP.
+    - name: installed_state
+      type: string
+      description: Not installed, name match, identical file installed, version
+        differs, or possible conflict.
+    - name: duplicate_group
+      type: object
+      description: Fonts grouped by family and style, with version and hash
+        differences shown inside the group.
+    - name: rename_template
+      type: object
+      description: Dropdown-selectable filename pattern using font metadata
+        tokens such as family, style, version, designer, and foundry.
+    - name: batch_operation
+      type: object
+      description: A cancellable background action such as scan, install, rename,
+        duplicate analysis, ZIP extract, or ZIP recompress.
+    - name: operation_log_entry
+      type: object
+      description: Timestamped result for user-visible work history and failure
+        diagnosis.
+
+evaluation_principles:
+  - name: Responsiveness
+    description: UI must remain interactive and visibly update progress during
+      heavy filesystem, ZIP, metadata, hash, and install work.
+    weight: 0.30
+  - name: Correctness
+    description: Installed-state, duplicate grouping, metadata extraction, and
+      rename results must be accurate and conservative.
+    weight: 0.25
+  - name: WindowsFit
+    description: The app must behave naturally on Windows, including user font
+      installation, system install elevation, safe filename rules, and packaging.
+    weight: 0.20
+  - name: Usability
+    description: The UI should match the reference direction with clear
+      navigation, checkboxes, filters, detail preview, safe defaults, and logs.
+    weight: 0.15
+  - name: Safety
+    description: Destructive operations must have previews, safe defaults,
+      collision handling, and recoverable ZIP save behavior.
+    weight: 0.10
+
+exit_conditions:
+  - name: FunctionalComplete
+    description: All version 1.0 acceptance criteria are implemented.
+    criteria: Folder and ZIP workflows, installed-state display, duplicate check,
+      selected install, selected rename, preview panel, filters, logs, packaging,
+      progress, and cancellation all work on Windows.
+  - name: PerformanceValidated
+    description: The app remains responsive during large input workloads.
+    criteria: Long-running work occurs off the UI thread, results stream
+      progressively, cancellation works, and no major UI freezes occur in manual
+      large-folder and ZIP tests.
+  - name: SafetyValidated
+    description: Batch rename, install, and ZIP recompression avoid accidental
+      data loss.
+    criteria: Rename preview is shown before apply, filename collisions are
+      resolved, ZIP defaults to new-file save, and failures are logged clearly.
+  - name: ReleaseReady
+    description: The app can be delivered in both requested packaging forms.
+    criteria: A single executable and Windows installer can be produced and
+      launched on Windows.
+
+implementation_notes:
+  ui_reference:
+    - Left navigation similar to the provided font navigator: all fonts,
+      installed, favorites or future placeholder, import action, settings/help.
+    - Central work area with search, filters, view controls, duplicate check
+      command, rename command, install selected command, and virtualized list.
+    - Right detail panel with metadata, preview card, glyph samples, and selected
+      font actions.
+  performance_strategy:
+    - Use asynchronous producer/consumer scanning.
+    - Separate phases: file discovery, metadata extraction, installed-state
+      matching, hashing, duplicate grouping.
+    - Virtualize the font list.
+    - Cache installed font inventory during a session.
+    - Hash lazily or in a throttled background phase.
+    - Avoid blocking UI thread for ZIP extraction/recompression or filesystem
+      operations.
+  rename_templates:
+    - "{family} {style}"
+    - "{family} - {style}"
+    - "{family} v{version}"
+    - "{family} {style} v{version}"
+    - "{designer} - {family} {style}"
+    - "{foundry} - {family} {style}"
+    - "{family}_{style}"
+    - "{family}-{style}"

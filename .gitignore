@@ -1,0 +1,32 @@
+# Build output
+bin/
+obj/
+publish/
+dist/
+
+# User/local state
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+
+# Debug symbols and generated packages
+*.pdb
+*.nupkg
+*.snupkg
+*.zip
+*.msi
+*.msix
+*.appx
+*.exe
+
+# Keep source-controlled app assets and scripts even though generated packages are ignored.
+!Hnxs.FontManager/Assets/*.ico
+!Hnxs.FontManager/Assets/*.png
