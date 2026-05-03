@@ -24,13 +24,24 @@ WPF may still emit native companion DLLs next to the main executable.
 
 ## Installer EXE
 
-The project includes IExpress packaging scripts under `packaging/`.
+The recommended installer is built with Inno Setup.
 
-High-level packaging flow:
+Install Inno Setup 6, then publish the app payload:
 
-1. Publish the self-contained app.
-2. Stage the app payload plus install/uninstall PowerShell scripts.
-3. Generate an IExpress `.sed` file.
-4. Run `iexpress.exe` to create `HNXS-Font-Manager-v0.1.0-Setup.exe`.
+```powershell
+dotnet publish Hnxs.FontManager\Hnxs.FontManager.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:EnableCompressionInSingleFile=true -p:PublishReadyToRun=true -o publish\win-x64-inno
+```
+
+Compile the installer script:
+
+```powershell
+& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" packaging\HNXS-Font-Manager.iss
+```
+
+The generated installer is:
+
+```text
+dist\HNXS-Font-Manager-v0.1.0-Setup.exe
+```
 
 Generated installer outputs are intentionally ignored by git.
