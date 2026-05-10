@@ -44,3 +44,11 @@ dotnet publish Hnxs.FontManager\Hnxs.FontManager.csproj -c Release -r win-x64 --
 - System-wide font installation requires administrator privileges.
 - Some fonts do not contain Korean glyphs. In that case, WPF may fall back to a system font for Korean characters, and the preview header shows that Korean glyphs are missing.
 - ZIP files are extracted to a temporary working folder before edits are applied.
+
+## Documentation
+
+- [Build and Packaging](BUILD.md)
+- [Installation Notes](docs/INSTALL.md)
+- [Architecture](docs/ARCHITECTURE.md)
+- [Program Site Copy](docs/PROGRAM_SITE.md)
+- [Project Handoff](docs/HANDOFF.md)
